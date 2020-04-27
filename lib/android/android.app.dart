@@ -1,4 +1,8 @@
+import 'package:contacts/android/views/home.view.dart';
+import 'package:contacts/android/views/splash.view.dart';
 import 'package:flutter/material.dart';
+
+import 'styles.dart';
 
 class AndroidApp extends StatelessWidget {
   @override
@@ -6,12 +10,8 @@ class AndroidApp extends StatelessWidget {
     return MaterialApp(
       title: 'Contacts',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        body: Text("OK"),
-      ),
+      theme: androidTheme(),
+      home: HomeView(),
     );
   }
 }
