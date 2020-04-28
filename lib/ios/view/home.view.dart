@@ -86,7 +86,9 @@ class HomeView extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => DetailsView(),
+                                    builder: (context) => DetailsView(
+                                      id: 0,
+                                    ),
                                   ),
                                 );
                               },
