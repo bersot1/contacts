@@ -1,7 +1,10 @@
+import 'package:camera/camera.dart';
 import 'package:contacts/android/views/address.view.dart';
+import 'package:contacts/android/views/crop-picture.view.dart';
 import 'package:contacts/android/views/editor-contact.view.dart';
 import 'package:contacts/android/views/home.view.dart';
 import 'package:contacts/android/views/loading.view.dart';
+import 'package:contacts/android/views/take-picture.widget.dart';
 import 'package:contacts/android/widgets/contact-list-item.view.dart';
 import 'package:contacts/models/contact.model.dart';
 import 'package:contacts/repositories/contact.repository.dart';
@@ -61,6 +64,39 @@ class _DetailViewState extends State<DetailView> {
       onSuccess();
     }).catchError((err) {
       onError(err);
+    });
+  }
+
+  takePicture() async {
+    final cameras = await availableCameras();
+    final firstCamera = cameras.first;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TakePictureView(
+          camera: firstCamera,
+        ),
+      ),
+    ).then((imagePath) {
+      cropPicture(imagePath);
+    });
+  }
+
+  cropPicture(path) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CropPictureView(path: path),
+      ),
+    ).then((imagePath) {
+      updateImage(imagePath);
+    });
+  }
+
+  updateImage(path) async {
+    _repository.updateImage(widget.id, path).then((_) {
+      setState(() {});
     });
   }
 
@@ -138,7 +174,7 @@ class _DetailViewState extends State<DetailView> {
                 ),
               ),
               FlatButton(
-                onPressed: () {},
+                onPressed: takePicture,
                 color: Theme.of(context).primaryColor,
                 child: Icon(
                   Icons.camera_enhance,
@@ -180,7 +216,11 @@ class _DetailViewState extends State<DetailView> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddressView()),
+                  MaterialPageRoute(
+                    builder: (context) => AddressView(
+                      model: model,
+                    ),
+                  ),
                 );
               },
               child: Icon(
